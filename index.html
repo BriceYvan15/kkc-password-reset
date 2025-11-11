@@ -27,13 +27,17 @@
       
       const redirectMatch = supabaseUrl.match(/redirect_to=([^&]+)/);
       if (redirectMatch) redirectTo = decodeURIComponent(redirectMatch[1]);
+      
+      // Essayer d'extraire l'email depuis l'URL Supabase
+      const emailMatch = supabaseUrl.match(/email=([^&]+)/);
+      if (emailMatch) email = decodeURIComponent(emailMatch[1]);
     }
     
-    console.log('Params extraits:', { token, type, redirectTo });
+    console.log('Params extraits:', { token, type, redirectTo, email });
     
     if (token && type === 'recovery' && redirectTo) {
       // Rediriger vers l'app avec les tokens en query params
-      const appUrl = redirectTo + '?access_token=' + token + '&type=recovery';
+      const appUrl = redirectTo + '?access_token=' + token + '&type=recovery&email=' + (email || '');
       console.log('Redirection vers:', appUrl);
       window.location.href = appUrl;
     } else {
