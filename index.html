@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Redirection vers KKC Réservation</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <p style="font-family: Arial, sans-serif; text-align: center; margin-top: 50px;">Redirection vers l'application KKC Réservation...</p>
+  <script>
+    // Lire les tokens depuis l'URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    const type = urlParams.get('type');
+    const redirectTo = urlParams.get('redirect_to');
+    
+    console.log('Params reçus:', { token, type, redirectTo });
+    
+    if (token && type === 'recovery' && redirectTo) {
+      // Rediriger vers l'app avec les tokens en query params
+      const appUrl = redirectTo + '?access_token=' + token + '&type=recovery';
+      console.log('Redirection vers:', appUrl);
+      window.location.href = appUrl;
+    } else {
+      document.body.innerHTML = '<p style="font-family: Arial, sans-serif; text-align: center; margin-top: 50px; color: red;">Lien de réinitialisation invalide ou expiré.</p>';
+    }
+  </script>
+</body>
+</html>

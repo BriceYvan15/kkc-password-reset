@@ -1,0 +1,12 @@
+services:
+  # Service web statique pour la redirection de mot de passe
+  - type: web
+    name: kkc-password-reset
+    env: static
+    rootDir: .
+    buildCommand: "" # Pas de build nécessaire
+    staticPublishPath: .
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
