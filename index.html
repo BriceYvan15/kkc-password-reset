@@ -39,7 +39,12 @@
       if (emailMatch) email = decodeURIComponent(emailMatch[1]);
     }
 
-    redirectTo = redirectTo || 'myapp://update-password';
+    // Expo Router route for app/(auth)/update-password is '/update-password' (group is not in URL).
+    // Use triple slash so it's a path, not a host.
+    redirectTo = redirectTo || 'myapp:///update-password';
+    if (redirectTo === 'myapp://update-password') {
+      redirectTo = 'myapp:///update-password';
+    }
     
     console.log('Params extraits:', { token, type, redirectTo, email, hashAccessToken, hashRefreshToken, hashType });
     
