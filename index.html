@@ -10,6 +10,12 @@
   <script>
     // Lire l'URL complète
     const urlParams = new URLSearchParams(window.location.search);
+    let email = urlParams.get('email');
+
+    const hashParams = new URLSearchParams((window.location.hash || '').replace(/^#/, ''));
+    const hashAccessToken = hashParams.get('access_token');
+    const hashRefreshToken = hashParams.get('refresh_token');
+    const hashType = hashParams.get('type');
     
     // Essayer de récupérer soit les params directs, soit depuis une URL Supabase complète
     let token = urlParams.get('token');
@@ -32,12 +38,17 @@
       const emailMatch = supabaseUrl.match(/email=([^&]+)/);
       if (emailMatch) email = decodeURIComponent(emailMatch[1]);
     }
+
+    redirectTo = redirectTo || 'myapp://update-password';
     
-    console.log('Params extraits:', { token, type, redirectTo, email });
+    console.log('Params extraits:', { token, type, redirectTo, email, hashAccessToken, hashRefreshToken, hashType });
     
-    if (token && type === 'recovery' && redirectTo) {
-      // Rediriger vers l'app avec les tokens en query params
-      const appUrl = redirectTo + '?access_token=' + token + '&type=recovery&email=' + (email || '');
+    if (hashAccessToken && hashRefreshToken && hashType === 'recovery' && redirectTo) {
+      const appUrl = redirectTo + '?access_token=' + encodeURIComponent(hashAccessToken) + '&refresh_token=' + encodeURIComponent(hashRefreshToken) + '&type=recovery';
+      console.log('Redirection vers:', appUrl);
+      window.location.href = appUrl;
+    } else if (token && type === 'recovery' && redirectTo) {
+      const appUrl = redirectTo + '?access_token=' + encodeURIComponent(token) + '&type=recovery&email=' + encodeURIComponent(email || '');
       console.log('Redirection vers:', appUrl);
       window.location.href = appUrl;
     } else {
